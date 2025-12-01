@@ -11,7 +11,7 @@ st.set_page_config(page_title="PromptCraft AI", page_icon="✨", layout="wide")
 st.markdown("""
 <style>
     /* Import Font */
-    @import url('[https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap)');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
     
     .stApp {
         background-color: #FAFAFA;
@@ -118,23 +118,23 @@ st.markdown("""
 
     /* GPT-4 Logo */
     .stRadio > div > label:nth-child(1)::before {
-        background-image: url('[https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg](https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg)');
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg');
     }
     /* Claude Logo */
     .stRadio > div > label:nth-child(2)::before {
-        background-image: url('[https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Anthropic.svg/1024px-Anthropic.svg.png](https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Anthropic.svg/1024px-Anthropic.svg.png)');
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Anthropic.svg/1024px-Anthropic.svg.png');
     }
     /* Gemini Logo */
     .stRadio > div > label:nth-child(3)::before {
-        background-image: url('[https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg](https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg)');
+        background-image: url('https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg');
     }
     /* Llama Logo */
     .stRadio > div > label:nth-child(4)::before {
-        background-image: url('[https://cdn.icon-icons.com/icons2/4222/PNG/512/meta_logo_icon_262793.png](https://cdn.icon-icons.com/icons2/4222/PNG/512/meta_logo_icon_262793.png)');
+        background-image: url('https://cdn.icon-icons.com/icons2/4222/PNG/512/meta_logo_icon_262793.png');
     }
     /* General Logo */
     .stRadio > div > label:nth-child(5)::before {
-        background-image: url('[https://cdn-icons-png.flaticon.com/512/3524/3524335.png](https://cdn-icons-png.flaticon.com/512/3524/3524335.png)');
+        background-image: url('https://cdn-icons-png.flaticon.com/512/3524/3524335.png');
         opacity: 0.5;
     }
 
@@ -267,6 +267,7 @@ if st.button("Generate Prompt Variations →"):
                         ... (Role-Based, Structured, Few-Shot)
                     ]
                 }}
+                """
                 
                 response = client.chat.completions.create(
                     model="gpt-4o",
@@ -293,7 +294,7 @@ if st.button("Generate Prompt Variations →"):
                         <h3 style="margin-top:15px; color:#1F2937;">{s['title']}</h3>
                         <p style="color:#6B7280; font-size:15px;">{s['desc']}</p>
                     </div>
-                    , unsafe_allow_html=True)
+                    """, unsafe_allow_html=True)
                     st.code(s['prompt'], language="markdown")
                     
                     # Strategy 3
@@ -305,7 +306,7 @@ if st.button("Generate Prompt Variations →"):
                             <h3 style="margin-top:0; color:#1F2937;">{s['title']}</h3>
                             <p style="color:#6B7280; font-size:15px;">{s['desc']}</p>
                         </div>
-                        , unsafe_allow_html=True)
+                        """, unsafe_allow_html=True)
                         st.code(s['prompt'], language="markdown")
 
                 with c2:
@@ -317,7 +318,7 @@ if st.button("Generate Prompt Variations →"):
                         <h3 style="margin-top:0; color:#1F2937;">{s['title']}</h3>
                         <p style="color:#6B7280; font-size:15px;">{s['desc']}</p>
                     </div>
-                    , unsafe_allow_html=True)
+                    """, unsafe_allow_html=True)
                     st.code(s['prompt'], language="markdown")
 
                     # Strategy 4
@@ -329,7 +330,7 @@ if st.button("Generate Prompt Variations →"):
                             <h3 style="margin-top:0; color:#1F2937;">{s['title']}</h3>
                             <p style="color:#6B7280; font-size:15px;">{s['desc']}</p>
                         </div>
-                        , unsafe_allow_html=True)
+                        """, unsafe_allow_html=True)
                         st.code(s['prompt'], language="markdown")
 
             except Exception as e:
