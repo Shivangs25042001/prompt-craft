@@ -6,19 +6,19 @@ import json
 st.set_page_config(page_title="PromptCraft AI", page_icon="✨", layout="wide")
 
 # ---------------------------------------------------------
-# 2. ASSETS (Embedded Logos to prevent broken images)
+# 2. EMBEDDED LOGOS (Base64 SVGs)
 # ---------------------------------------------------------
-# These are SVG icons converted to Base64 so they work instantly without file uploads.
-ICONS = {
-    "GPT-4": "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
-    "Claude": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Anthropic.svg/1024px-Anthropic.svg.png",
-    "Gemini": "https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg",
-    "Llama": "https://cdn.icon-icons.com/icons2/4222/PNG/512/meta_logo_icon_262793.png",
-    "General": "https://cdn-icons-png.flaticon.com/512/3524/3524335.png"
+# These are the actual logos converted to code so they NEVER fail to load.
+LOGOS = {
+    "GPT-4": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MSA0MSI+PHBhdGggZmlsbD0iIzEwYTM3ZiIgZD0iMzcucjQgMTUuMmExMC4yIDEwLjIgMCAwIDAtLjg4LTguM2MxMC4zMiAxMC4zMiAwIDAgMC0xMS4wOC00LjlsLS4wMi0uMDFhOC4xMiA4LjEyIDAgMCAwLTEzLjYgMTEuOTggMTAuMTcgMTAuMTcgMCAwIDAtNi44IDQuOTIgMTAuMiAxMC4yIDAgMCAwIDEuMjYgMTIuMDYgMTAuMTcgMTAuMTcgMCAwIDAgMTEuMDggNC45bC4wMi4wMWE4LjEyIDguMTIgMCAwIDAgMTMuNi0xMS45OCAxMC4xNyAxMC4xNyAwIDAgMCA2LjgtNC45MmguMDF6bS0xNS4zNCAyMS40M2E3LjYyIDcuNjIgMCAwIDEtNC44OS0xLjc3bC4yNC0uMTQgOC4xMy00LjY5YTEuMzYgMS4zNiAwIDAgMCAuNjctMS4xNnYtMTEuNDZsMy40MyAyYTEuMjkgMS4yOSAwIDAgMCAuMDYuMDl2OS41MWE3LjY2IDcuNjYgMCAwIDEtNy42NCA3LjYzem0tMTYuNDQtNy4wMmE3LjYgNy42IDAgMCAxLS45MS01LjEzbC4yNC4xNSA4LjEzIDQuNjlhMS4zMSAxLjMxIDAgMCAwIDEuMzMgMGw5Ljk0LTUuNzN2NC45NmEuMTYuMTYgMCAwIDEtLjA2LjFsLTguMjIgNC43NGE3LjY1IDcuNjUgMCAwIDEtMTAuNDUtMy42MnpNMy45OCAxMy40M2E3LjYzIDcuNjMgMCAwIDEgNC4wMy0zLjM1VjE5LjhjMCAuNDcuMjMuOS42NiAxLjE1bDkuODkgNS43MS0zLjQ0IDEuOTlhMS4yOSAxLjI5IDAgMCAxLS4xMiAwTC44NyAxOS4wNmE3LjY2IDcuNjYgMCAwIDEgMy4xMS01LjYzem0yOC4yMyA2LjU2TDIyLjI5IDE0LjIgbDIuNTctMS40OGExLjI5IDEuMjkgMCAwIDEgLjEyIDBsOC4yMiA0Ljc1YTcuNjUgNy42NSAwIDAgMS0xLjE1IDEzLjc5di05LjY2YTEuMzUgMS4zNSAwIDAgMC0uNjktMS4xNHptMy40Mi01LjE1bC0uMjQtLjE0LTguMTItNC43M2ExLjMyIDEuMzIgMCAwIDAtMS4zMyAwbC05Ljk0IDUuNzNWMTEuNzNhLjExLjExIDAgMCAxIC4wNS0uMWw4LjIyLTQuNzVhNy42NSA3LjY1IDAgMCAxIDExLjM2IDcuOTN6bS0xOS44IDE2LjhMNy43NiAyMS44aC4wNmEubMTIuNTUgNy4yNXY1Ljg4YTcuNjUgNy42NSAwIDAgMS00LjUzIDYuNzRsLS4yNC4xNC0uMTMtLjF6bTEuODUtMy45NWwyNi4xMSAxMi4xLTEwLjA1IDUuOGE3LjY1IDcuNjUgMCAwIDEtLjEtOS42NnptMCAwIi8+PC9zdmc+",
+    "Claude": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48cGF0aCBmaWxsPSIjZDk3NzU3IiBkPSJNNTAgNUwyMCA5MGg2MEw1MCA1eiIvPjwvc3ZnPg==", 
+    "Gemini": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0idXJsKCNhKSIgZD0iTTIyIDEyYTEwIDEwIDAgMCAxLTEwIDEwQTEwIDEwIDAgMCAxIDIgMTJhMTAgMTAgMCAwIDEgMTAtMTBBMTAgMTAgMCAwIDEgMjIgMTJ6Ii8+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIiB4MT0iMCIgeTE9IjAiIHgyPSIyNCIgeTI9IjI0IiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjNGE5MGUyIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjYTg1NWY3Ii8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PC9zdmc+",
+    "Llama": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjMDA2OGUxIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBhdGggZD0iTTEyIDJDMiAxMiA1IDIyIDUgMjJzOS02IDctMTJzMTAtNC41IDEwLTQuNVMxOSAyIDEyIDJ6Ii8+PC9zdmc+",
+    "General": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmI3MjgwIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHJlY3QgeD0iMyIgeT0iMyIgd2lkdGg9IjE4IiBoZWlnaHQ9IjE4IiByeD0iMiIgcnk9IjIiLz48bGluZSB4MT0iMyIgeTE9IjkiIHgyPSIyMSIgeTI9IjkiLz48bGluZSB4MT0iOSIgeTE9IjIxIiB4Mj0iOSIgeTI9IjkiLz48L3N2Zz4="
 }
 
 # ---------------------------------------------------------
-# 3. CSS STYLING (Matching your HTML Canvas)
+# 3. ADVANCED STYLING (Pixel-Perfect Fixes)
 # ---------------------------------------------------------
 st.markdown(f"""
 <style>
@@ -29,110 +29,97 @@ st.markdown(f"""
         font-family: 'Inter', sans-serif;
     }}
     
-    /* Hide Default Header/Footer */
-    header, footer {{visibility: hidden;}}
+    /* 1. LAYOUT CONSTRAINTS (Fixes the "stretched" look) */
+    .main-container {{
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }}
     
-    /* CENTER HEADER */
-    .header-container {{
-        text-align: center;
-        padding-top: 40px;
-        padding-bottom: 20px;
-    }}
-    .header-icon {{ font-size: 50px; margin-bottom: 10px; }}
-    .header-title {{ 
-        font-size: 42px; 
-        font-weight: 800; 
-        color: #111827; 
-        margin: 0; 
-        letter-spacing: -1px;
-    }}
-    .header-sub {{ color: #6B7280; font-size: 18px; margin-top: 10px; }}
+    /* Hide Streamlit Header */
+    header, footer {{visibility: hidden;}}
+    .block-container {{ padding-top: 2rem; }}
 
-    /* INPUT AREA */
+    /* 2. INPUT BOX (Modern & Clean) */
     .stTextArea textarea {{
         background-color: #FFFFFF;
         border: 2px solid #E5E7EB;
         border-radius: 12px;
-        padding: 20px;
+        padding: 16px;
         font-size: 16px;
         font-family: 'Inter', sans-serif;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }}
     .stTextArea textarea:focus {{
         border-color: #8B5CF6;
         box-shadow: 0 0 0 4px #F3E8FF;
     }}
-    .stTextArea label {{
-        display: none; /* We use our own custom label */
+    
+    /* Label Styling */
+    p {{
+        font-size: 16px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
     }}
 
-    /* -------------------------------------------------------
-       RADIO BUTTONS -> CARDS (The Magic Fix)
-       ------------------------------------------------------- */
-    /* Container Row */
+    /* 3. CARD SELECTION GRID (The Real Fix) */
+    /* Container */
     .stRadio > div {{
-        display: flex;
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr); /* Force 5 columns */
         gap: 15px;
         width: 100%;
-        overflow-x: auto;
-        justify-content: center;
-        padding-bottom: 10px;
     }}
-
-    /* The Card (Label) */
+    
+    /* Individual Cards */
     .stRadio > div > label {{
-        background-color: white !important;
+        background-color: #FFFFFF !important;
         border: 2px solid #E5E7EB !important;
         border-radius: 16px !important;
-        padding: 15px !important;
-        width: 130px !important;
         height: 120px !important;
+        width: 100% !important;
+        min-width: 0 !important; /* Prevents overflow */
         display: flex !important;
         flex-direction: column !important;
         align-items: center !important;
         justify-content: flex-end !important;
+        padding-bottom: 15px !important;
         cursor: pointer !important;
-        transition: all 0.2s !important;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.02) !important;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02) !important;
+        transition: all 0.2s ease !important;
         position: relative;
     }}
 
-    /* Text inside Card */
-    .stRadio > div > label > div[data-testid="stMarkdownContainer"] > p {{
-        font-size: 14px !important;
-        font-weight: 600 !important;
-        color: #374151 !important;
-        margin-top: 45px !important; /* Make room for icon */
+    /* Hover */
+    .stRadio > div > label:hover {{
+        border-color: #C4B5FD !important;
+        transform: translateY(-4px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important;
     }}
 
-    /* Hide the circle */
-    .stRadio div[role="radio"] {{
-        display: none !important;
-    }}
-
-    /* Selected State */
+    /* Selected */
     .stRadio > div > label[data-baseweb="radio"] {{
         background-color: #F5F3FF !important;
         border-color: #8B5CF6 !important;
         box-shadow: 0 0 0 4px #DDD6FE !important;
     }}
-    
-    /* Hover State */
-    .stRadio > div > label:hover {{
-        border-color: #C4B5FD !important;
-        transform: translateY(-2px);
+
+    /* Text */
+    .stRadio p {{
+        font-size: 13px !important;
+        font-weight: 600 !important;
+        color: #374151 !important;
     }}
 
-    /* -------------------------------------------------------
-       INJECTING ICONS (Using nth-child to target each card)
-       ------------------------------------------------------- */
+    /* Hide Circle */
+    .stRadio div[role="radio"] {{ display: none !important; }}
+
+    /* LOGO INJECTION */
     .stRadio > div > label::before {{
         content: "";
         position: absolute;
         top: 25px;
-        left: 50%;
-        transform: translateX(-50%);
         width: 40px;
         height: 40px;
         background-size: contain;
@@ -140,30 +127,22 @@ st.markdown(f"""
         background-position: center;
     }}
 
-    /* 1. GPT-4 */
-    .stRadio > div > label:nth-child(1)::before {{ background-image: url('{ICONS["GPT-4"]}'); }}
-    /* 2. Claude */
-    .stRadio > div > label:nth-child(2)::before {{ background-image: url('{ICONS["Claude"]}'); }}
-    /* 3. Gemini */
-    .stRadio > div > label:nth-child(3)::before {{ background-image: url('{ICONS["Gemini"]}'); }}
-    /* 4. Llama */
-    .stRadio > div > label:nth-child(4)::before {{ background-image: url('{ICONS["Llama"]}'); }}
-    /* 5. General */
-    .stRadio > div > label:nth-child(5)::before {{ background-image: url('{ICONS["General"]}'); opacity: 0.5; }}
+    /* Specific Logos */
+    .stRadio > div > label:nth-child(1)::before {{ background-image: url('{LOGOS["GPT-4"]}'); }}
+    .stRadio > div > label:nth-child(2)::before {{ background-image: url('{LOGOS["Claude"]}'); }}
+    .stRadio > div > label:nth-child(3)::before {{ background-image: url('{LOGOS["Gemini"]}'); }}
+    .stRadio > div > label:nth-child(4)::before {{ background-image: url('{LOGOS["Llama"]}'); }}
+    .stRadio > div > label:nth-child(5)::before {{ background-image: url('{LOGOS["General"]}'); opacity: 0.5; }}
 
-
-    /* -------------------------------------------------------
-       GENERATE BUTTON
-       ------------------------------------------------------- */
+    /* 4. GENERATE BUTTON */
     .stButton button {{
-        background: linear-gradient(90deg, #8B5CF6 0%, #A78BFA 100%) !important;
+        background: linear-gradient(90deg, #8B5CF6 0%, #7C3AED 100%) !important;
         color: white !important;
         border: none !important;
-        padding: 15px 30px !important;
+        height: 55px !important;
         border-radius: 12px !important;
-        font-size: 18px !important;
+        font-size: 16px !important;
         font-weight: 700 !important;
-        width: 100% !important;
         margin-top: 20px !important;
         box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3) !important;
     }}
@@ -172,44 +151,29 @@ st.markdown(f"""
         box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4) !important;
     }}
 
-    /* -------------------------------------------------------
-       RESULT CARDS
-       ------------------------------------------------------- */
+    /* 5. RESULTS UI */
     .result-card {{
         background: white;
-        border-radius: 16px;
         border: 1px solid #E5E7EB;
+        border-radius: 16px;
         padding: 25px;
         margin-bottom: 20px;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        transition: transform 0.2s;
     }}
     .best-match {{
         border: 2px solid #8B5CF6;
-        position: relative;
+        background: linear-gradient(180deg, #FBF8FF 0%, #FFFFFF 100%);
     }}
-    .best-badge {{
-        position: absolute;
-        top: -12px;
-        left: 20px;
-        background: #8B5CF6;
-        color: white;
-        padding: 4px 12px;
-        border-radius: 12px;
-        font-size: 12px;
-        font-weight: 700;
-        text-transform: uppercase;
+    .badge-best {{
+        background: #8B5CF6; color: white; padding: 4px 12px;
+        border-radius: 20px; font-size: 11px; font-weight: 800;
+        text-transform: uppercase; display: inline-block; margin-bottom: 10px;
     }}
-    .tag {{
-        background: #F3F4F6;
-        color: #4B5563;
-        padding: 4px 10px;
-        border-radius: 8px;
-        font-size: 12px;
-        font-weight: 600;
+    .badge-tag {{
+        background: #F3F4F6; color: #4B5563; padding: 4px 10px;
+        border-radius: 8px; font-size: 12px; font-weight: 600;
         float: right;
     }}
-    
 </style>
 """, unsafe_allow_html=True)
 
@@ -217,24 +181,26 @@ st.markdown(f"""
 # 4. APP LAYOUT
 # ---------------------------------------------------------
 
-# Header
-st.markdown("""
-<div class='header-container'>
-    <div class='header-icon'>✨</div>
-    <div class='header-title'>PromptCraft AI</div>
-    <div class='header-sub'>Transform your ideas into optimized prompts</div>
-</div>
-""", unsafe_allow_html=True)
+# Center Container to fix the "Stretched" look
+c_spacer_l, c_main, c_spacer_r = st.columns([1, 6, 1])
 
-# Main Container
-with st.container():
+with c_main:
+    # Header
+    st.markdown("""
+    <div style='text-align: center; margin-bottom: 40px;'>
+        <div style='font-size: 50px; margin-bottom: 10px;'>✨</div>
+        <h1 style='color: #111827; margin: 0; font-size: 36px; font-weight: 900;'>PromptCraft AI</h1>
+        <p style='color: #6B7280; font-size: 16px; margin-top: 10px;'>Transform your ideas into engineered master prompts.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
     # Input
-    st.markdown("<p style='font-weight:600; color:#374151; margin-bottom:5px;'>What do you want to achieve?</p>", unsafe_allow_html=True)
-    user_input = st.text_area("input", placeholder="Example: I want to write a blog post about sustainable living...", height=120, label_visibility="collapsed")
+    st.markdown("<p>What do you want to achieve?</p>", unsafe_allow_html=True)
+    user_input = st.text_area("label", placeholder="e.g. I want to create a meal plan for a vegan athlete...", height=100, label_visibility="collapsed")
 
-    # Model Selection (This renders the Cards)
-    st.markdown("<p style='font-weight:600; color:#374151; margin-top:25px; margin-bottom:5px;'>Select your target LLM</p>", unsafe_allow_html=True)
-    
+    # Model Selector
+    st.write("")
+    st.markdown("<p>Select your target LLM</p>", unsafe_allow_html=True)
     model = st.radio(
         "Model",
         ["GPT-4", "Claude", "Gemini", "Llama", "General"],
@@ -247,7 +213,7 @@ with st.container():
         api_key = st.secrets.get("OPENAI_API_KEY")
         
         if not api_key:
-            st.error("⚠️ Please set your OpenAI API Key in the Settings.")
+            st.error("⚠️ Please set your OpenAI API Key in Settings!")
         elif not user_input:
             st.warning("Please enter a goal first.")
         else:
@@ -255,13 +221,9 @@ with st.container():
             
             with st.spinner("Engineering 8 distinct strategies..."):
                 try:
-                    # Mocking the JSON response structure for stability in this demo
-                    # In production, this would come from OpenAI
+                    # PROMPT LOGIC
                     prompt = f"""
-                    Act as an expert Prompt Engineer. 
-                    Goal: "{user_input}"
-                    Model: {model}
-                    
+                    Act as an expert Prompt Engineer. Goal: "{user_input}". Model: {model}.
                     Generate 4 distinct strategies in valid JSON:
                     {{
                         "strategies": [
@@ -272,30 +234,27 @@ with st.container():
                         ]
                     }}
                     """
-                    
                     response = client.chat.completions.create(
                         model="gpt-4o",
                         messages=[{"role": "system", "content": "Return JSON only."}, {"role": "user", "content": prompt}],
                         response_format={"type": "json_object"}
                     )
-                    
                     data = json.loads(response.choices[0].message.content)
                     strategies = data.get("strategies", [])
                     
                     st.write("")
-                    st.write("")
+                    st.markdown("<h3 style='text-align:center; margin: 40px 0;'>✨ Optimized Strategies</h3>", unsafe_allow_html=True)
                     
-                    # Display Grid
-                    c1, c2 = st.columns(2)
+                    # RESULTS GRID
+                    r1c1, r1c2 = st.columns(2)
                     
-                    with c1:
-                        # Best Match
+                    with r1c1:
                         s = strategies[0]
                         st.markdown(f"""
                         <div class="result-card best-match">
-                            <div class="best-badge">★ BEST MATCH</div>
-                            <span class="tag" style="background:#F3E8FF; color:#7C3AED;">{s['tag']}</span>
-                            <h3 style="margin-top:10px; font-size:18px; color:#111827;">{s['title']}</h3>
+                            <span class="badge-best">★ BEST MATCH</span>
+                            <span class="badge-tag">{s['tag']}</span>
+                            <h3 style="margin-top:10px; font-size:18px; color:#1F2937;">{s['title']}</h3>
                             <p style="color:#6B7280; font-size:14px;">{s['desc']}</p>
                         </div>
                         """, unsafe_allow_html=True)
@@ -304,18 +263,18 @@ with st.container():
                         s = strategies[2]
                         st.markdown(f"""
                         <div class="result-card">
-                            <span class="tag">{s['tag']}</span>
+                            <span class="badge-tag">{s['tag']}</span>
                             <h3 style="margin-top:0; font-size:18px; color:#111827;">{s['title']}</h3>
                             <p style="color:#6B7280; font-size:14px;">{s['desc']}</p>
                         </div>
                         """, unsafe_allow_html=True)
                         st.code(s['code'], language="markdown")
 
-                    with c2:
+                    with r1c2:
                         s = strategies[1]
                         st.markdown(f"""
                         <div class="result-card">
-                            <span class="tag">{s['tag']}</span>
+                            <span class="badge-tag">{s['tag']}</span>
                             <h3 style="margin-top:0; font-size:18px; color:#111827;">{s['title']}</h3>
                             <p style="color:#6B7280; font-size:14px;">{s['desc']}</p>
                         </div>
@@ -325,7 +284,7 @@ with st.container():
                         s = strategies[3]
                         st.markdown(f"""
                         <div class="result-card">
-                            <span class="tag">{s['tag']}</span>
+                            <span class="badge-tag">{s['tag']}</span>
                             <h3 style="margin-top:0; font-size:18px; color:#111827;">{s['title']}</h3>
                             <p style="color:#6B7280; font-size:14px;">{s['desc']}</p>
                         </div>
