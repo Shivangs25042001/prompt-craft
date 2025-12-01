@@ -6,87 +6,156 @@ import json
 st.set_page_config(page_title="PromptCraft AI", page_icon="✨", layout="wide")
 
 # ---------------------------------------------------------
-# 2. CSS STYLING (The Design System)
+# 2. THE DESIGN SYSTEM (CSS)
 # ---------------------------------------------------------
-st.markdown("""
+st.markdown(
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+    /* Import Font */
+    @import url('[https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap)');
     
     .stApp {
         background-color: #FAFAFA;
         font-family: 'Inter', sans-serif;
     }
     
-    /* Remove top padding */
-    .block-container {
-        padding-top: 3rem;
-        padding-bottom: 5rem;
+    /* Hide Default Header/Footer */
+    header, footer {visibility: hidden;}
+    
+    /* Center the Main Logo */
+    .main-header {
+        text-align: center; 
+        padding-top: 40px; 
+        padding-bottom: 40px;
     }
     
-    /* Hide Default Elements */
-    header, footer {visibility: hidden;}
-
-    /* -------------------------------------------------------
-       CUSTOM COMPONENT STYLES
-       ------------------------------------------------------- */
-    
-    /* INPUT BOX */
+    /* Input Box Styling */
     .stTextArea textarea {
         background-color: #FFFFFF;
         border: 1px solid #E5E7EB;
         border-radius: 12px;
         padding: 20px;
         font-size: 16px;
-        color: #1F2937;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     }
     .stTextArea textarea:focus {
         border-color: #8B5CF6;
         box-shadow: 0 0 0 4px #F3E8FF;
     }
-    .stTextArea label {
-        color: #111827 !important;
-        font-weight: 700;
-        font-size: 16px;
-        margin-bottom: 10px;
-    }
 
-    /* MODEL SELECTION CARDS */
-    /* This creates the white box look */
-    div.stButton > button {
-        background-color: #FFFFFF;
-        border: 2px solid #E5E7EB;
-        border-radius: 16px;
-        color: #374151;
-        font-weight: 600;
-        height: 120px;
+    /* -------------------------------------------------------
+       CUSTOM RADIO BUTTONS -> TRANSFORMED INTO CARDS
+       ------------------------------------------------------- */
+    
+    /* 1. Container Layout */
+    .stRadio > div {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
         width: 100%;
-        transition: all 0.2s;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        overflow-x: auto;
+        padding-bottom: 10px;
     }
 
-    /* Hover State */
-    div.stButton > button:hover {
-        border-color: #C4B5FD;
-        transform: translateY(-3px);
-        background-color: #FFFFFF;
-        color: #8B5CF6;
+    /* 2. The Card (Label) Style */
+    .stRadio > div > label {
+        background-color: #FFFFFF !important;
+        border: 2px solid #E5E7EB !important;
+        border-radius: 16px !important;
+        width: 160px !important;
+        height: 140px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        padding-bottom: 20px !important;
+        cursor: pointer !important;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.02) !important;
+        transition: all 0.2s ease !important;
+        position: relative;
     }
 
-    /* GENERATE BUTTON (Specific Styling) */
-    /* We target the specific 'Generate' button using a custom class we add in Python */
-    .primary-btn button {
+    /* 3. Hover Effect */
+    .stRadio > div > label:hover {
+        border-color: #C4B5FD !important;
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0,0,0,0.05) !important;
+    }
+
+    /* 4. Selected State (Purple Border) */
+    .stRadio > div > label[data-baseweb="radio"] {
+        background-color: #F5F3FF !important;
+        border-color: #8B5CF6 !important;
+        box-shadow: 0 0 0 4px #DDD6FE !important;
+    }
+
+    /* 5. Hide the actual little circle */
+    .stRadio div[role="radio"] {
+        display: none !important;
+    }
+
+    /* 6. Text Styling */
+    .stRadio p {
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        color: #374151 !important;
+    }
+
+    /* -------------------------------------------------------
+       INJECTING LOGOS via CSS BACKGROUNDS
+       ------------------------------------------------------- */
+    /* This trick puts the image inside the card before the text */
+    
+    .stRadio > div > label::before {
+        content: "";
+        position: absolute;
+        top: 25px;
+        width: 50px;
+        height: 50px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+    /* GPT-4 Logo */
+    .stRadio > div > label:nth-child(1)::before {
+        background-image: url('[https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg](https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg)');
+    }
+    /* Claude Logo */
+    .stRadio > div > label:nth-child(2)::before {
+        background-image: url('[https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Anthropic.svg/1024px-Anthropic.svg.png](https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Anthropic.svg/1024px-Anthropic.svg.png)');
+    }
+    /* Gemini Logo */
+    .stRadio > div > label:nth-child(3)::before {
+        background-image: url('[https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg](https://upload.wikimedia.org/wikipedia/commons/8/8a/Google_Gemini_logo.svg)');
+    }
+    /* Llama Logo */
+    .stRadio > div > label:nth-child(4)::before {
+        background-image: url('[https://cdn.icon-icons.com/icons2/4222/PNG/512/meta_logo_icon_262793.png](https://cdn.icon-icons.com/icons2/4222/PNG/512/meta_logo_icon_262793.png)');
+    }
+    /* General Logo */
+    .stRadio > div > label:nth-child(5)::before {
+        background-image: url('[https://cdn-icons-png.flaticon.com/512/3524/3524335.png](https://cdn-icons-png.flaticon.com/512/3524/3524335.png)');
+        opacity: 0.5;
+    }
+
+    /* -------------------------------------------------------
+       GENERATE BUTTON
+       ------------------------------------------------------- */
+    .stButton button {
         background: linear-gradient(90deg, #8B5CF6 0%, #7C3AED 100%) !important;
         color: white !important;
-        height: 60px !important;
+        border: none !important;
+        padding: 16px !important;
+        border-radius: 12px !important;
         font-size: 18px !important;
         font-weight: 700 !important;
-        border: none !important;
-        box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3) !important;
+        width: 100% !important;
+        margin-top: 30px !important;
+        transition: transform 0.2s !important;
     }
-    .primary-btn button:hover {
-        transform: translateY(-2px) !important;
-        color: white !important;
+    .stButton button:hover {
+        transform: scale(1.01) !important;
+        box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3) !important;
     }
 
     /* RESULT CARDS */
@@ -97,7 +166,6 @@ st.markdown("""
         padding: 30px;
         margin-bottom: 25px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        position: relative;
     }
     .best-box {
         border: 2px solid #8B5CF6;
@@ -115,6 +183,17 @@ st.markdown("""
         float: right;
     }
     
+    .badge-gray {
+        background: #F3F4F6;
+        color: #4B5563;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        float: right;
+    }
+
     .best-match-label {
         position: absolute;
         top: -12px;
@@ -129,81 +208,36 @@ st.markdown("""
         box-shadow: 0 4px 10px rgba(139, 92, 246, 0.3);
     }
 
-    /* Highlight Selected Card */
-    .selected-card button {
-        border-color: #8B5CF6 !important;
-        background-color: #F5F3FF !important;
-        box-shadow: 0 0 0 4px #DDD6FE !important;
-    }
-
 </style>
-""", unsafe_allow_html=True)
+, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
-# 3. APP HEADER
+# 3. APP STRUCTURE
 # ---------------------------------------------------------
-st.markdown("""
-    <div style='text-align: center; margin-bottom: 50px;'>
-        <div style='font-size: 60px; margin-bottom: 10px;'>✨</div>
-        <h1 style='color: #111827; font-size: 42px; margin: 0; font-weight: 900;'>PromptCraft AI</h1>
-        <p style='color: #6B7280; font-size: 18px; margin-top: 10px;'>Turn your vague ideas into engineered master prompts.</p>
-    </div>
-""", unsafe_allow_html=True)
 
-# ---------------------------------------------------------
-# 4. STATE MANAGEMENT
-# ---------------------------------------------------------
-if 'selected_model' not in st.session_state:
-    st.session_state.selected_model = "GPT-4"
+# Header
+st.markdown("<div class='main-header'><h1>✨ PromptCraft AI</h1><p style='color:#6B7280; font-size:18px;'>Turn your vague ideas into engineered master prompts.</p></div>", unsafe_allow_html=True)
 
-# ---------------------------------------------------------
-# 5. INPUT & SELECTION UI
-# ---------------------------------------------------------
-st.markdown("##### What do you want to achieve?")
-user_input = st.text_area("Label", placeholder="e.g. I want to create a meal plan for a vegan athlete...", height=120, label_visibility="collapsed")
+# Input
+st.markdown("### What do you want to achieve?")
+user_input = st.text_area("label", placeholder="e.g. I want to create a meal plan for a vegan athlete...", height=100, label_visibility="collapsed")
 
 st.write("")
-st.markdown("##### Select your target LLM")
+st.markdown("### Select your target LLM")
 
-# Create 5 Columns for the cards
-c1, c2, c3, c4, c5 = st.columns(5)
-
-# Helper function to create a selection card
-def model_card(col, name, icon):
-    with col:
-        # If selected, add a special CSS class container
-        if st.session_state.selected_model == name:
-            with st.container():
-                st.markdown(f'<div class="selected-card">', unsafe_allow_html=True)
-                if st.button(f"{icon}  {name}", key=name, use_container_width=True):
-                    st.session_state.selected_model = name
-                    st.rerun()
-                st.markdown('</div>', unsafe_allow_html=True)
-        else:
-            if st.button(f"{icon}  {name}", key=name, use_container_width=True):
-                st.session_state.selected_model = name
-                st.rerun()
-
-# Render the cards (Using Emojis as Icons to guarantee stability without file uploads)
-model_card(c1, "GPT-4", "🟢")
-model_card(c2, "Claude 3.5", "🟠")
-model_card(c3, "Gemini", "🔹")
-model_card(c4, "Llama 3", "🔵")
-model_card(c5, "General", "⚪")
+# THE CARD SELECTOR
+# We use st.radio, but the CSS above transforms it into the cards!
+model = st.radio(
+    "Select Model",
+    ["GPT-4", "Claude 3.5", "Gemini", "Llama 3", "General"],
+    horizontal=True,
+    label_visibility="collapsed"
+)
 
 st.write("")
-st.write("")
 
-# ---------------------------------------------------------
-# 6. GENERATE BUTTON
-# ---------------------------------------------------------
-# We wrap this in a container to apply the "Primary Button" style
-with st.container():
-    st.markdown('<div class="primary-btn">', unsafe_allow_html=True)
-    generate_clicked = st.button("Generate Prompt Variations →", use_container_width=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-if generate_clicked:
+# Generate Button
+if st.button("Generate Prompt Variations →"):
     api_key = st.secrets.get("OPENAI_API_KEY")
     
     if not api_key:
@@ -213,13 +247,13 @@ if generate_clicked:
     else:
         client = OpenAI(api_key=api_key)
         
-        with st.spinner(f"Engineering prompts for {st.session_state.selected_model}..."):
+        with st.spinner("Engineering optimized strategies..."):
             try:
-                # System Prompt
+                # Prompt Engineering Logic
                 system_prompt = f"""
                 You are a world-class Prompt Engineer. 
                 Goal: "{user_input}"
-                Model: {st.session_state.selected_model}
+                Model: {model}
                 
                 Generate 4 distinct strategies in valid JSON format:
                 {{
@@ -233,7 +267,6 @@ if generate_clicked:
                         ... (Role-Based, Structured, Few-Shot)
                     ]
                 }}
-                """
                 
                 response = client.chat.completions.create(
                     model="gpt-4o",
@@ -245,14 +278,13 @@ if generate_clicked:
                 strategies = data.get("strategies", [])
                 
                 st.write("")
-                st.markdown("---")
                 st.markdown("<h2 style='text-align: center; margin: 40px 0;'>✨ Optimized Strategies</h2>", unsafe_allow_html=True)
                 
                 # GRID LAYOUT FOR RESULTS
-                col1, col2 = st.columns(2)
+                c1, c2 = st.columns(2)
                 
-                with col1:
-                    # Strategy 1 (Best Match)
+                with c1:
+                    # Strategy 1
                     s = strategies[0]
                     st.markdown(f"""
                     <div class="result-box best-box">
@@ -261,7 +293,7 @@ if generate_clicked:
                         <h3 style="margin-top:15px; color:#1F2937;">{s['title']}</h3>
                         <p style="color:#6B7280; font-size:15px;">{s['desc']}</p>
                     </div>
-                    """, unsafe_allow_html=True)
+                    , unsafe_allow_html=True)
                     st.code(s['prompt'], language="markdown")
                     
                     # Strategy 3
@@ -269,23 +301,23 @@ if generate_clicked:
                         s = strategies[2]
                         st.markdown(f"""
                         <div class="result-box">
-                            <span class="badge-purple" style="background:#F3F4F6; color:#4B5563;">{s['tag']}</span>
+                            <span class="badge-gray">{s['tag']}</span>
                             <h3 style="margin-top:0; color:#1F2937;">{s['title']}</h3>
                             <p style="color:#6B7280; font-size:15px;">{s['desc']}</p>
                         </div>
-                        """, unsafe_allow_html=True)
+                        , unsafe_allow_html=True)
                         st.code(s['prompt'], language="markdown")
 
-                with col2:
+                with c2:
                     # Strategy 2
                     s = strategies[1]
                     st.markdown(f"""
                     <div class="result-box">
-                        <span class="badge-purple" style="background:#F3F4F6; color:#4B5563;">{s['tag']}</span>
+                        <span class="badge-gray">{s['tag']}</span>
                         <h3 style="margin-top:0; color:#1F2937;">{s['title']}</h3>
                         <p style="color:#6B7280; font-size:15px;">{s['desc']}</p>
                     </div>
-                    """, unsafe_allow_html=True)
+                    , unsafe_allow_html=True)
                     st.code(s['prompt'], language="markdown")
 
                     # Strategy 4
@@ -293,50 +325,12 @@ if generate_clicked:
                         s = strategies[3]
                         st.markdown(f"""
                         <div class="result-box">
-                            <span class="badge-purple" style="background:#F3F4F6; color:#4B5563;">{s['tag']}</span>
+                            <span class="badge-gray">{s['tag']}</span>
                             <h3 style="margin-top:0; color:#1F2937;">{s['title']}</h3>
                             <p style="color:#6B7280; font-size:15px;">{s['desc']}</p>
                         </div>
-                        """, unsafe_allow_html=True)
+                        , unsafe_allow_html=True)
                         st.code(s['prompt'], language="markdown")
 
             except Exception as e:
                 st.error(f"Error: {e}")
-```
-
-**4. Create a `requirements.txt` file** in the same folder with this content:
-```text
-streamlit
-openai
-```
-
----
-
-### **Phase 2: Deploy on Streamlit Cloud (The Free & Easy Way)**
-
-We are abandoning Hugging Face because it makes file management too hard for this specific design. Streamlit Cloud is built for this.
-
-**Step 1: Upload to GitHub**
-1.  Go to [GitHub.com](https://github.com/) and sign up (Free).
-2.  Click the **+** (top right) -> **New Repository**.
-3.  Name it `prompt-craft`.
-4.  Click **Create Repository**.
-5.  Click the link that says **"uploading an existing file"**.
-6.  Drag and drop your `app.py` and `requirements.txt`.
-7.  Click **Commit changes**.
-
-**Step 2: Connect to Streamlit Cloud**
-1.  Go to [share.streamlit.io](https://share.streamlit.io/).
-2.  Sign in with **GitHub**.
-3.  Click **"New App"**.
-4.  It will see your `prompt-craft` repository automatically. Select it.
-5.  Click **"Deploy!"**.
-
-**Step 3: Add your API Key**
-1.  Your app will load and might show an error. This is normal.
-2.  Click **"Manage App"** (bottom right).
-3.  Click the **three dots** (Settings).
-4.  Click **Secrets**.
-5.  Paste this:
-    ```toml
-    OPENAI_API_KEY = "sk-..."
