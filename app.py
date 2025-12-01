@@ -8,7 +8,7 @@ st.set_page_config(page_title="PromptCraft AI", page_icon="✨", layout="wide")
 # ---------------------------------------------------------
 # 2. THE DESIGN SYSTEM (CSS)
 # ---------------------------------------------------------
-st.markdown(
+st.markdown("""
 <style>
     /* Import Font */
     @import url('[https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap)');
@@ -209,7 +209,7 @@ st.markdown(
     }
 
 </style>
-, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
 # ---------------------------------------------------------
 # 3. APP STRUCTURE
